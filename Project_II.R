@@ -53,3 +53,30 @@ plot(forec)
 
 ##########################################################################################
 
+#auto generated
+ets(germaninla)
+#forecast plot
+germaninlaets = ets(germaninla)
+
+plot(forecast(germaninlaets, h = 60))
+
+#comparison with seasonal hot winters model
+plot(hw(germaninla, h = 60))
+
+##########################################################################################
+
+forecastets = function(x,h) {
+  forecast(ets(x), h = h)
+}
+
+forecastarima = function(x,h) {
+  forecast(auto.arima(x), stepwise = T,
+           approximation = F, h = h)
+}
+
+#time series cross validation
+etserror = tsCV(germaninla, forecastets, h = 1)
+arimaerror = tsCV(germaninla,forecastarima, h = 1)
+
+mean(etserror^2,na.rm = TRUE)
+mean(arimaerror^2,na.rm = TRUE)
